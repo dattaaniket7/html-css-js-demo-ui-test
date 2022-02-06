@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            padding: 50px;
+            border-style: solid;
+            border-width: thick;
+            border-color: black;
+        }
+
+        .div1 {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 2rem;
+        }
+
+        .div2 {
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem 2rem;
+        }
+
+        .div3 {
+            display: flex;
+            justify-content: center;
+            padding: 0.5rem 2rem;
+        }
+
+        .inner {
+            display: flex;
+        }
+
+
+        .inner label {
+            margin-right: 1rem;
+            mergin-left: 0.5rem;
+        }
+
+
+        .circles {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            height: 72px;
+        }
+
+        .red-circles .circle {
+            background: red;
+        }
+
+        .green-circles .circle {
+            background: green;
+        }
+
+        .blue-circles .circle {
+            background: blue;
+        }
+
+        .circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+        }
+
+        .div-button {
+            padding-top: 20px;
+            padding-bottom: 50px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .div-button1 {
+            padding-top: 50px;
+            padding-left: 600px;
+            padding-right: 600px;
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="div1">
+        <div class='inner'>
+            <label>Red</label>
+            <input type="number" value="0" min="0" id='x'></input>
+        </div>
+        <div class='inner'>
+            <label>Green</label>
+            <input type="number" value="0" min="0" id='y'></input>
+        </div>
+        <div class='inner'>
+            <label>Blue</label>
+            <input type="number" value="0" min="0" id='z'></input>
+        </div>
+    </div>
+
+    <div class="div3">
+        <div class='inner'>
+            <label>No of circles</label>
+            <input type="number" id='no-of-circles' value="0" min="0" max="10" required></input>
+        </div>
+    </div>
+
+    <div class="div-button">
+        <button id='submit'>Submit</button>
+    </div>
+
+    <div class="circles red-circles" id='red-circles'>
+    </div>
+
+    <div class="circles green-circles" id='green-circles'>
+    </div>
+
+    <div class="circles blue-circles" id='blue-circles'>
+    </div>
+
+    <div class="div-button1">
+        <button id='start'>Start</button>
+        <button id='reset'>Reset</button>
+    </div>
+
+
+
+    <script>
+        let redValue = 0;
+        let greenValue = 0;
+        let blueValue = 0;
+        let noOfCircles = 0;
+
+        let x = document.querySelector('#x');
+        let y = document.querySelector('#y');
+        let z = document.querySelector('#z');
+
+        let redCircles = document.querySelector('#red-circles');
+        let greenCircles = document.querySelector('#green-circles');
+        let blueCircles = document.querySelector('#blue-circles');
+        let noCircles = document.querySelector('#no-of-circles');
+
+        let submitButton = document.querySelector('#submit');
+        let startButton = document.querySelector('#start');
+        let resetButton = document.querySelector('#reset');
+
+        let redTimeout;
+        let greenTimeout;
+        let blueTimeout;
+
+        const getValues = () => {
+            redValue = parseInt(x.value);
+            greenValue = parseInt(y.value);
+            blueValue = parseInt(z.value);
+            noOfCircles = parseInt(noCircles.value);
+        }
+
+        const clearTimeouts = () => {
+            try {
+                clearTimeout(redTimeout);
+            } catch (e) { }
+            try {
+                clearTimeout(greenTimeout);
+            } catch (e) { }
+            try {
+                clearTimeout(blueTimeout);
+            } catch (e) { }
+        }
+
+        const clearRed = () => {
+            redCircles.innerHTML = "";
+        }
+
+        const clearBlue = () => {
+            blueCircles.innerHTML = "";
+        }
+
+        const clearGreen = () => {
+            greenCircles.innerHTML = "";
+        }
+
+
+
+        const resetCircles = () => {
+            clearTimeouts();
+            clearRed();
+            clearBlue();
+            clearGreen();
+        }
+
+        const addCircle = (row) => {
+            let circle = document.createElement("div");
+            circle.classList.add('circle');
+            row.appendChild(circle);
+        }
+
+        const addCircles = (row, no) => {
+            for (let i = 0; i < no; i++) {
+                addCircle(row);
+            }
+        }
+
+        const submitHandler = () => {
+            resetCircles();
+            getValues();
+            addCircles(redCircles, noOfCircles);
+            addCircles(greenCircles, noOfCircles);
+            addCircles(blueCircles, noOfCircles);
+        }
+
+        submitButton.addEventListener("click", submitHandler);
+
+        resetButton.addEventListener("click", resetCircles);
+
+        const start = () => {
+            getValues();
+            console.log(x, y, z);
+            redTimeout = setTimeout(() => {
+                clearRed();
+                greenTimeout = setTimeout(() => {
+                    clearGreen();
+                    blueTimeout = setTimeout(() => {
+                        clearBlue();
+                    }, blueValue * 1000)
+                }, greenValue * 1000);
+            }, redValue * 1000);
+        }
+
+        startButton.addEventListener("click", start);
+    </script>
+
+</body>
+
+</html>
